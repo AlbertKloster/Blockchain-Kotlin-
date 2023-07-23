@@ -1,7 +1,19 @@
 package blockchain
 
-data class Blockchain(val blocks: MutableList<Block> = mutableListOf()) {
-    fun isEmpty() = blocks.isEmpty()
-    fun last() = blocks.last()
-    fun add(block: Block) = blocks.add(block)
+data class Blockchain(var initialNumberOfLeadingZeros: Int) {
+    private val blocks: MutableList<Block> = mutableListOf()
+    private val cryptographer = Cryptographer()
+
+    fun getBlocks() = blocks
+
+    @Synchronized fun isEmpty() = blocks.isEmpty()
+
+    @Synchronized fun last() = blocks.last()
+
+    @Synchronized fun add(block: Block) {
+        if (blocks.isEmpty() && block.hash == cryptographer.getHash(block) ||
+            last().hash == block.hashPrevious && block.hash == cryptographer.getHash(block)) {
+            blocks.add(block)
+        }
+    }
 }

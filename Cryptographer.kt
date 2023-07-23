@@ -3,7 +3,8 @@ package blockchain
 import java.security.MessageDigest
 
 class Cryptographer {
-    fun applySha256(input: String): String {
+    fun getHash(block: Block) = applySha256(block.id.toString() + block.timeStamp.toString() + block.magicNumber.toString() + block.hashPrevious)
+    private fun applySha256(input: String): String {
         return try {
             val digest = MessageDigest.getInstance("SHA-256")
             val hash = digest.digest(input.toByteArray(charset("UTF-8")))

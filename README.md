@@ -1,86 +1,87 @@
-# Stage 2/6: A proof of work concept
+# Stage 3/6: Miner mania
 ## Description
-The security of our blockchain is pretty low. You can't just change some information in the middle of a blockchain, because the hash of this block will also be changed. And the next block still keeps the old hash value of the previous block. But can't we replace the old hash value with the new hash value so everything will be ok? No, because when you change the value of the previous hash in the block, the hash of this block will also be changed! To fix this, you need to change the value of the previous hash in the block after it. To solve this problem, you need to fix hash values in all the blocks until the last block of the blockchain!
+The blockchain itself shouldn't create new blocks. The blockchain just keeps the chain valid and accepts the new blocks from outside. In the outside world, there are a lot of computers that try to create a new block. All they do is search for a magic number to create a block whose hash starts with some zeros. The first computer to do so is a winner, the blockchain accepts this new block, and then all these computers try to find a magic number for the next block.
 
-This seems to be a pretty hard task to execute, doesn’t it? If the time it takes to fix the hash value of the previous block is less than time to create a new block, we suddenly would be fixing blocks faster than the system can create them and eventually we will fix them all. The problem is that fixing the hash values is easy to do. The blockchain becomes useless if it is possible to change information in it.
+There is a special word for this: <b>mining</b>. The process of mining blocks is hard work for computers, like the process of mining minerals in real life is hard work. Computers that perform this task are called <b>miners</b>.
 
-The solution to this is called <b>proof of work</b>. This means that creating new blocks and fixing hash values in the existing ones should take time and shouldn't be instant. The time should depend on the amount of computational work put into it. This way, the hacker must have more computational resources than the rest of the computers of the system put together.
+Note that if there are more miners, the new blocks will be mined faster. But the problem is that we want to create new blocks with a stable frequency. For this reason, the blockchain should regulate the number N: the number of zeros at the start of a hash of the new block. If suddenly there are so many miners that the new block is created in a matter of seconds, the complexity of the next block should be increased by increasing the number N. On the other hand, if there are so few miners that process of creating a new block takes longer than a minute, the number N should be lowered.
 
-The main goal is that the hash of the block shouldn't be random. It should start with some amount of zeros. To achieve that, the block should contain an additional field: a <b>magic number</b>. Of course, this number should take part in calculating the hash of this block. With one magic number, and with another, the hashes would be totally different even though the other part of the block stays the same. But with the help of probability theory, we can say that there exist some magic numbers, with which the hash of the block starts with some number of zeros. The only way to find one of them is to make random guesses until we found one of them. For a computer, this means that the only way to find the solution is to brute force it: try 1, 2, 3, and so on. The better solution would be to brute force with random numbers, not with the increasing from 1 to N where N is the solution. You can see this algorithm in the animation below:
+In this stage, you should create a lot of threads with miners, and every one of them should contain the same blockchain. The miners should mine new blocks and the blockchain should regulate the number N. The blockchain should check the validity of the incoming block (ensure that the previous hash equals the hash of the last block of the blockchain and the hash of this new block starts with N zeros). At the start, the number N equals 0 and should be increased by 1 / decreased by 1 / stays the same after the creation of the new block based on the time of its creation.
 
-![calculating the hash of the block with magic numbers](stage2.gif)
+> Do not exit main method until you print 5 blocks! Output is checked right after exiting main method.
 
-Obviously, the more zeros you need at the start of the block hash, the harder this task will become. And finally, if the hacker wants to change some information in the middle of the blockchain, the hash of the modified block would be changed and it won't start with zeros, so the hacker would be forced to find another magic number to create a block with a hash which starts with zeros. Note that the hacker must find magic numbers for all of the blocks until the end of the blockchain, which seems like a pretty impossible task, considering that the blockchain will grow faster.
-
-It's said that the block is <b>proved</b> if it has a hash which starts with some number of zeros. The information inside it is impossible to change even though the information itself is open and easy to edit in the text editor. The result of the edit is a changed hash of the block, no longer containing zeros at the start, so this block suddenly becomes <b>unproved</b> after the edit. And since the blockchain must consist of only proved blocks, the whole blockchain becomes invalid. This is the power of the proof of work concept.
-
-In this stage, you need to improve the blockchain. It should generate new blocks only with hashes that start with N zeros. The number N should be input from the keyboard.
-
-## Examples
-The example below shows how your output might look. Output information about a few first blocks of the blockchain. Also, output the time that was needed to create a block. Your results and time measurements can be totally different than in the example! To be tested successfully, the program should output information about the first five blocks of the blockchain. Blocks should be separated by an empty line.
+## Example
+To be tested successfully, program should output information about first five blocks of the blockchain. Blocks should be separated by an empty line.
 ```
-Enter how many zeros the hash must start with: 5
-
 Block:
+Created by miner # 9
 Id: 1
-Timestamp: 1539827383396
-Magic number: 24672386
+Timestamp: 1539866031047
+Magic number: 23462876
 Hash of the previous block:
 0
 Hash of the block:
-00000a3fe20573b5bb358d2291165e15662a5b057240e954c573fb1f2a6d0cb8
-Block was generating for 12 seconds
+1d12cbbb5bfa278734285d261051f5484807120032cf6adcca5b9a3dbf0e7bb3
+Block was generating for 0 seconds
+N was increased to 1
 
 Block:
+Created by miner # 7
 Id: 2
-Timestamp: 1539827385414
-Magic number: 87453465
+Timestamp: 1539866031062
+Magic number: 63576287
 Hash of the previous block:
-00000a3fe20573b5bb358d2291165e15662a5b057240e954c573fb1f2a6d0cb8
+1d12cbbb5bfa278734285d261051f5484807120032cf6adcca5b9a3dbf0e7bb3
 Hash of the block:
-000002e0ddd3c11e85466be0fa3dc5cb112daa7a3126e680c7d4f5716c0c6f9c
-Block was generating for 21 seconds
+04a6735424357bf9af5a1467f8335e9427af714c0fb138595226d53beca5a05e
+Block was generating for 0 seconds
+N was increased to 2
 
 Block:
+Created by miner # 1
 Id: 3
-Timestamp: 1539827387961
-Magic number: 32734621
+Timestamp: 1539866031063
+Magic number: 57875299
 Hash of the previous block:
-000002e0ddd3c11e85466be0fa3dc5cb112daa7a3126e680c7d4f5716c0c6f9c
+04a6735424357bf9af5a1467f8335e9427af714c0fb138595226d53beca5a05e
 Hash of the block:
-000006edc10682ac3d511175b54192a7d36459af6e23671275c2c6879ab1c412
-Block was generating for 18 seconds
-```
-```
-Enter how many zeros the hash must start with: 8
+0061924d48d5ce30e97cfc4297f3a40bc94dfac6af42d7bf366d236007c0b9d3
+Block was generating for 0 seconds
+N was increased to 3
 
 Block:
-Id: 1
-Timestamp: 1539827504324
-Magic number: 9347534
+Created by miner # 2
+Id: 4
+Timestamp: 1539866256729
+Magic number: 23468237
 Hash of the previous block:
-0
+0061924d48d5ce30e97cfc4297f3a40bc94dfac6af42d7bf366d236007c0b9d3
 Hash of the block:
-0000000031ae66963218b132a7c9e7e6ee300a39288e80ce8f6b107aca6d467b
-Block was generating for 231 seconds
+000856a20d767fbbc38e0569354400c1750381100984a09a5d8b1cdf09b0bab6
+Block was generating for 5 seconds
+N was increased to 4
 
 Block:
-Id: 2
-Timestamp: 1539827526140
-Magic number: 34652436
+Created by miner # 9
+Id: 5
+Timestamp: 1539866256749
+Magic number: 18748749
 Hash of the previous block:
-0000000031ae66963218b132a7c9e7e6ee300a39288e80ce8f6b107aca6d467b
+000856a20d767fbbc38e0569354400c1750381100984a09a5d8b1cdf09b0bab6
 Hash of the block:
-00000000526655e7dee356b943c5551f0dededd67d0b36db34a3e5d03e44aad6
-Block was generating for 211 seconds
+000031e22049646ca25c5f63fcc070e8c76319a050a7d1d5ca402090a30e9612
+Block was generating for 15 seconds
+N stays the same
 
 Block:
-Id: 3
-Timestamp: 1539827557451
-Magic number: 84587649
+Created by miner # 5
+Id: 6
+Timestamp: 1539866256750
+Magic number: 23423458
 Hash of the previous block:
-00000000526655e7dee356b943c5551f0dededd67d0b36db34a3e5d03e44aad6
+000031e22049646ca25c5f63fcc070e8c76319a050a7d1d5ca402090a30e9612
 Hash of the block:
-00000000df645313e301f147105b009bdc084945fb684517d351f175ed4d67be
-Block was generating for 461 seconds
+0000e3dc2b8fc5f0c635358aa19a84eae68c316a40d22d6283ab1152f486f003
+Block was generating for 65 seconds
+N was decreased by 1
 ```
