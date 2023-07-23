@@ -1,20 +1,31 @@
 package blockchain
 
+import java.util.*
+
 class BlockchainService {
     private val blockchain = Blockchain()
     private val cryptographer = Cryptographer()
+    private var numberOfZeros = 0
 
-    fun createBlock() {
+    fun createBlock(): Block {
         val id = if (blockchain.isEmpty()) 1L else blockchain.last().id + 1
         val timeStamp = System.currentTimeMillis()
         val hashPrevious = if (blockchain.isEmpty()) "0" else blockchain.last().hash
-        val hash = cryptographer.applySha256(id.toString() + timeStamp.toString() + hashPrevious)
-
-        blockchain.add(Block(id, timeStamp, hashPrevious, hash))
+        var magicNumber: Int
+        var hash: String
+        val random = Random()
+        while (true) {
+            magicNumber = random.nextInt(Int.MAX_VALUE)
+            hash = cryptographer.applySha256(id.toString() + timeStamp.toString() + magicNumber.toString() + hashPrevious)
+            if (hash.substring(0, numberOfZeros) == "0".repeat(numberOfZeros)) break
+        }
+        val block = Block(id, timeStamp, magicNumber, hashPrevious, hash)
+        blockchain.add(block)
+        return block
     }
 
-    fun getBlockById(id: Long): Block {
-        return blockchain.blocks.first { it.id == id }
+    fun setNumberOfZeros(numberOfZeros: Int) {
+        this.numberOfZeros = numberOfZeros
     }
 
 }
