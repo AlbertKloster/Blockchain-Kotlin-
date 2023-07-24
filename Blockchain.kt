@@ -1,7 +1,7 @@
 package blockchain
 
-data class Blockchain(var initialNumberOfLeadingZeros: Int) {
-    private val blocks: MutableList<Block> = mutableListOf()
+class Blockchain {
+    private val blocks = mutableListOf<Block>()
     private val cryptographer = Cryptographer()
 
     fun getBlocks() = blocks
@@ -16,4 +16,5 @@ data class Blockchain(var initialNumberOfLeadingZeros: Int) {
             blocks.add(block)
         }
     }
+
 }

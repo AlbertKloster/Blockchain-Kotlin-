@@ -2,7 +2,13 @@ package blockchain
 
 import java.util.*
 
-class Miner(name: String, private val blockchain: Blockchain, private val hashPrevious: String, private val numberOfLeadingZeros: Int) : Thread(name) {
+class Miner(
+    name: String,
+    private val blockchain: Blockchain,
+    private val hashPrevious: String,
+    private val numberOfLeadingZeros: Int,
+    private val data: List<String>
+) : Thread(name) {
     private val cryptographer = Cryptographer()
 
     override fun run() {
@@ -15,7 +21,7 @@ class Miner(name: String, private val blockchain: Blockchain, private val hashPr
         while (true) {
 
             magicNumber = random.nextInt(Int.MAX_VALUE)
-            val block = Block(name, id, timeStamp, magicNumber, hashPrevious)
+            val block = Block(name, id, timeStamp, magicNumber, hashPrevious, data = data)
             hash = cryptographer.getHash(block)
             if (hash.substring(0, numberOfLeadingZeros) == "0".repeat(numberOfLeadingZeros)) {
                 val finishTime = System.currentTimeMillis()
