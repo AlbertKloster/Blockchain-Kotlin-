@@ -1,7 +1,6 @@
 package blockchain
 
 fun main() {
-    val blockchainService = BlockchainService()
-    blockchainService.createBlockchain(5)
-    blockchainService.print()
+    val blockchainService = Blockchain(15)
+    blockchainService.start()
 }

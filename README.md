@@ -1,77 +1,90 @@
-# Stage 5/6: Matters of security
+# Stage 6/6: Local currency
 ## Description
-How safe is your messaging system at the moment? Anyone can add a message to the blockchain. But can anyone impersonate you and send a message using your name? Without encryption, this is totally possible. There needs to be a method to verify that it is actually you who sent this message. Note that the registration/authorization method is bad because there is no server to check for a valid login/password pair. And if there is, it can be cracked by the hackers who can steal your password. There needs to be a whole new level of security.
+Today, the most common application of blockchains is cryptocurrencies. A cryptocurrency’s blockchain contains a list of transactions: everyone can see the transactions but no one is able to change them. In addition, no one can send a transaction as another person; this is possible using digital signatures. You have actually implemented all of this functionality in the previous stages.
 
-<a href="https://en.wikipedia.org/wiki/Public-key_cryptography">Asymmetric cryptography</a> solves this problem. With this, you can sign the message and let the signature be a special part of the message. You can generate a pair of keys: a public key and a private key. The message should be <a href="https://en.wikipedia.org/wiki/Digital_signature">digitally signed</a> with a private key. And anyone can verify that the message and the signature pair is valid using a public key. The private key should be only on your computer, so no one from the internet can steal it. If you think that someone can steal your computer to get the private key, you can delete it from the computer and keep it in your head—that would be an example of maximum safety!
+A miner who creates a new block should be awarded some virtual money, for example, 100 virtual coins. This can be remembered in the blockchain if the block stores information about the miner who created this block. Of course, this message also should be proved, so the miner adds this information to the blockchain before starting a search for a magic number.
 
-Please take a look at <a href="https://mkyong.com/java/java-asymmetric-cryptography-example/">Java – Asymmetric Cryptography example</a> for code examples for creating private and public keys and at <a href="https://mkyong.com/java/java-digital-signatures-example/">Java – Digital Signatures example</a> for signing and verifying a message. These examples are in Java, but you can find almost the same code in Kotlin <a href="https://stepik.org/media/attachments/lesson/737732/DigitalSignatures.kt">here</a>.
+After that, a miner can spend these 100 virtual coins by giving them to someone else. In the real world, he can buy things and pay for them using these virtual coins instead of real money. These virtual coins go to the company that sells the things, and the company can pay salaries with these virtual coins. The circulation of these coins starts here and suddenly the virtual coins become more popular than real money!
 
-Now there is another problem. A hacker can't just take any message and sign it like it is your message, but he can take an already signed message and paste it into the blockchain again; the signature of this message stays the same, doesn’t it? For this reason, all messages should contain a unique identifier, and all these identifiers should be in ascending order in the blockchain.
+To check how many coins a person has, you need to check all of his transactions and all of the transactions to him, assuming that the person started with zero virtual coins. The transaction should be rejected when the person tries to spend more money than he has at the moment. Create a special method that returns how many coins the person has.
 
-To get a unique identifier you should implement a method in the Blockchain class that always returns different numbers in ascending order starting from number 1.
-
-In this stage, you need to upgrade the messages. The message should include the text of the message, the signature of this message, a unique identifier (remember to include a unique identifier when creating a signature), and a public key so everyone can check that this message is valid. Don't forget to check every message when checking that the blockchain is valid! The blockchain should reject the messages with identifier less than the maximum identifier in the block in which miners looking for the magic number. Also, when validating the blockchain you should check that every message has an identifier greater than the maximum identifier of the previous block.
+In this stage, you need to implement transactions like this instead of text messages like in the previous stage. For testing reasons you can assume that everyone starts with 100 virtual coins, not 0. But as described above, all the money of the blockchain is initially awards for creating blocks of the blockchain.
 
 ## Example
-
-Output is the same as in the previous stage, but with the exception that no one can impersonate you and create a message using your name. To be tested successfully, program should output information about first five blocks of the blockchain. Blocks should be separated by an empty line.
+In the output example, VC stands for Virtual Coins. To be tested successfully, program should output information about first fifteen blocks of the blockchain. Blocks should be separated by an empty line.
 ```
 Block:
-Created by miner # 9
+Created by: miner9
+miner9 gets 100 VC
 Id: 1
 Timestamp: 1539866031047
-Magic number: 34729843
-Hash of the previous block: 
+Magic number: 76384756
+Hash of the previous block:
 0
-Hash of the block: 
+Hash of the block:
 1d12cbbb5bfa278734285d261051f5484807120032cf6adcca5b9a3dbf0e7bb3
 Block data:
-Tom: Hey, I'm first!
+No transactions
 Block was generating for 0 seconds
 N was increased to 1
 
 Block:
-Created by miner # 7
+Created by: miner7
+miner7 gets 100 VC
 Id: 2
 Timestamp: 1539866031062
-Magic number: 45389457
-Hash of the previous block: 
+Magic number: 92347234
+Hash of the previous block:
 1d12cbbb5bfa278734285d261051f5484807120032cf6adcca5b9a3dbf0e7bb3
-Hash of the block: 
+Hash of the block:
 04a6735424357bf9af5a1467f8335e9427af714c0fb138595226d53beca5a05e
 Block data:
-Tom: Hey, I'm second also!
+miner9 sent 30 VC to miner1
+miner9 sent 30 VC to miner2
+miner9 sent 30 VC to Nick
 Block was generating for 0 seconds
 N was increased to 2
 
 Block:
-Created by miner # 1
+Created by: miner1
+miner1 gets 100 VC
 Id: 3
 Timestamp: 1539866031063
-Magic number: 24234687
-Hash of the previous block: 
+Magic number: 42374628
+Hash of the previous block:
 04a6735424357bf9af5a1467f8335e9427af714c0fb138595226d53beca5a05e
-Hash of the block: 
+Hash of the block:
 0061924d48d5ce30e97cfc4297f3a40bc94dfac6af42d7bf366d236007c0b9d3
 Block data:
-Sarah: It's not fair!
-Sarah: You always will be first because it is your blockchain!
-Sarah: Anyway, thank you for this amazing chat.
+miner9 sent 10 VC to Bob
+miner7 sent 10 VC to Alice
+Nick sent 1 VC to ShoesShop
+Nick sent 2 VC to FastFood
+Nick sent 15 VC to CarShop
+miner7 sent 90 VC to CarShop
 Block was generating for 0 seconds
 N was increased to 3
 
 Block:
-Created by miner # 2
+Created by miner2
+miner2 gets 100 VC
 Id: 4
 Timestamp: 1539866256729
-Magic number: 12376812
-Hash of the previous block: 
+Magic number: 45382978
+Hash of the previous block:
 0061924d48d5ce30e97cfc4297f3a40bc94dfac6af42d7bf366d236007c0b9d3
-Hash of the block: 
+Hash of the block:
 000856a20d767fbbc38e0569354400c1750381100984a09a5d8b1cdf09b0bab6
 Block data:
-Tom: You're welcome :)
-Nick: Hey Tom, nice chat
+CarShop sent 10 VC to Worker1
+CarShop sent 10 VC to Worker2
+CarShop sent 10 VC to Worker3
+CarShop sent 30 VC to Director1
+CarShop sent 45 VC to CarPartsShop
+Bob sent 5 VC to GamingShop
+Alice sent 5 VC to BeautyShop
 Block was generating for 5 seconds
 N was increased to 4
+
+... (another 10 blocks, so the output contains 15 blocks)
 ```
